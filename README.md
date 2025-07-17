@@ -8,3 +8,16 @@ Site monitoring utility tool built with C++
 - **Notifications**: Create alerts using ubuntu notifications
 - **Log System**: Saves daily logs for each website
 
+### Installing
+```sh
+sudo apt-get update
+sudo apt-get install -y build-essential cmake libcurl4-openssl-dev libssl-dev libjson-c-dev libnotify-dev pkg-config
+```
+
+### Libs
+- **libcurl** for http(s) requests
+- **json-c** for parsing json data
+- **libcurl** for notifications
+- **STL** for data structures and containers
+
+ 
