@@ -1,15 +1,15 @@
 #pragma once
-//isso garante q o arquivo só será carregado uma vez na compilação
+using namespace std;
 
 #include <string>
 #include <vector>
-#include <memory> // ponteiros inteligentes
+#include <memory> 
 #include <thread>
-#include <mutex> // sincronia entre threads
-#include <condition_variable> // ...
-#include <atomic> //vatiáveis seguras para concorrência
-#include <chrono> // manipulação de tempo
-#include <unordered_map> //dicionario c hash
+#include <mutex> 
+#include <condition_variable> 
+#include <atomic> 
+#include <chrono> 
+#include <unordered_map>
 #include <queue> 
 
 // Forward declarations para evitar includes desnecessários
@@ -19,14 +19,14 @@ class Logger;
 class SSLChecker;
 
 struct MonitoredSite {
-  std::string url;
-  std::string name;
-  std::queue<int> last_status_codes;
-  std::chrono::system_clock::time_point last_alert_time;
+  string url;
+  string name;
+  queue<int> last_status_codes;
+  chrono::system_clock::time_point last_alert_time;
   bool in_cooldown;
   int consecutive_errors;
 
-  MonitoredSite(const std::string& url, const std::string& name)
+  MonitoredSite(const string& url, const string& name)
     : url(url), name(name), in_cooldown(false), consecutive_errors(0) {}
 };
 
@@ -44,21 +44,21 @@ class SiteMonitor {
   private:
     static const int MAX_STATUS_HISTORY = 20;
     static const int CONSECUTIVE_ERRORS_THRESHOLD = 10;
-    static const std::chrono::minutes COOLDOWN_DURATION;
-    static const std::chrono::seconds MONITOR_INTERVAL;
+    static const chrono::minutes COOLDOWN_DURATION;
+    static const chrono::seconds MONITOR_INTERVAL;
     static const int SSL_WARNING_DAYS = 7;
 
-    std::unique_ptr<EndpointLoader> endpoint_loader_;
-    std::unique_ptr<NotificationSystem> notification_system_;
-    std::unique_ptr<Logger> logger_;
-    std::unique_ptr<SSLChecker> ssl_checker_;
+    unique_ptr<EndpointLoader> endpoint_loader_;
+    unique_ptr<NotificationSystem> notification_system_;
+    unique_ptr<Logger> logger_;
+    unique_ptr<SSLChecker> ssl_checker_;
 
-    std::unordered_map<std::string, std::unique_ptr<MonitoredSite>> monitored_sites_;
+    unordered_map<string, unique_ptr<MonitoredSite>> monitored_sites_;
 
-    std::atomic<bool> running_;
-    std::thread monitor_thread_;
-    std::mutex sites_mutex_;
-    std::condition_variable cv_;
+    atomic<bool> running_;
+    thread monitor_thread_;
+    mutex sites_mutex_;
+    condition_variable cv_;
 
     void monitorLoop();
     void checkSite(MonitoredSite& site);
@@ -74,7 +74,7 @@ class SiteMonitor {
      * @brief Construtor do monitor
      * @param config_file Caminho para o arquivo de configuração (sites.txt)
      */
-    explicit SiteMonitor(const std::string& config_file = "data/sites.txt");
+    explicit SiteMonitor(const string& config_file = "data/sites.txt");
     
     /**
      * @brief Destrutor, garante que threads sejam finalizadas corretamente
@@ -103,18 +103,18 @@ class SiteMonitor {
      * @param url URL do site
      * @param name Nome amigável do site
      */
-    void addSite(const std::string& url, const std::string& name);
+    void addSite(const string& url, const string& name);
     
     /**
      * @brief Remove um site do monitor
      * @param url URL do site a ser removido
      */
-    void removeSite(const std::string& url);
+    void removeSite(const string& url);
     
     /**
      * @brief Obtém estatísticas atuais
      * @return Mapa com estatísticas por site
      */
-    std::unordered_map<std::string, int> getStats() const;
+    unordered_map<string, int> getStats() const;
 
 };
